@@ -1,9 +1,8 @@
 const express = require('express');
-
+const userRoutes = require('./routes/user');
 const app = express();
 
-app.use((req, res) => {
-   res.json({ message: 'Votre requête a bien été reçue !' }); 
-});
+app.use('api/user', userRoutes);
+
 
 module.exports = app;
