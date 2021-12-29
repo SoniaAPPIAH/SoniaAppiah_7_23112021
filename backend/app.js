@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const userRoutes = require('./routes/userRoutes');
 
 // Cors
 app.use((req, res, next) => {
@@ -11,6 +10,6 @@ app.use((req, res, next) => {
 });
 
 // Routes 
-app.use('/api/user', userRoutes);
+
 
 module.exports = app;
