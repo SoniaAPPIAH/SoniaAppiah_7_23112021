@@ -1,0 +1,13 @@
+.Header {
+    width: auto;
+    height: 10rem;
+    background-color: white;
+    box-shadow: 0 30px 20px rgba(114, 114, 114, 10%);
+    margin: auto;
+}
+
+.logo {
+    margin: auto;
+    height: 100px;
+    width: auto;
+}
