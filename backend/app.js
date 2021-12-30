@@ -1,5 +1,9 @@
 const express = require('express');
 const app = express();
+const userRoutes = require('./routes/userRoutes');
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 // Cors
 app.use((req, res, next) => {
@@ -10,6 +14,7 @@ app.use((req, res, next) => {
 });
 
 // Routes 
+app.use('/user', userRoutes);
 
 
 module.exports = app;

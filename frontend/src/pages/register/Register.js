@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from "react";
 import Header from '../../components/header/Header';
 import './Register.css';
+import Axios from "axios";
 
 function Register() {
+    const [lastname, setLastname] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    
+    const register = () => {
+        Axios.post("http://localhost:3001/user/register", {
+            lastname: lastname, firstname: firstname, email: email, password: password
+        }).then((response) => {
+            console.log(response);
+        });
+    };
+
     return (
         <>
         <Header />
@@ -10,17 +24,17 @@ function Register() {
             <div className="RegisterForm">
                 <h1>S'INSCRIRE</h1>
                 <div className="FirstAndLasteName">
-                    <input className="FirstAndLasteNameInput" type="text" placeholder="Nom" />
-                    <input className="FirstAndLasteNameInput" type="text" placeholder="Prénom" />
+                    <input className="FirstAndLasteNameInput" type="text" placeholder="Nom" onChange={(event) => {setLastname(event.target.value);}}/>
+                    <input className="FirstAndLasteNameInput" type="text" placeholder="Prénom" onChange={(event) => {setFirstname(event.target.value);}}/>
                 </div>
-                <input type="text" type="text" placeholder="Email" />
-                <input type="text" type="text" placeholder="Mot de passe" />
-                <button className="ButtonRegister">S'inscrire</button>
+                <input type="text" placeholder="Email" onChange={(event) => {setEmail(event.target.value);}} />
+                <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}} />
+                <button onClick={register} className="ButtonRegister">S'inscrire</button>
                 <p>Vous avez déjà un compte ? <a href="./login/Login">Connectez-vous !</a></p>
             </div>
         </div>
         </>
-    )
+    );
 }
 
-export default Register
+export default Register;
