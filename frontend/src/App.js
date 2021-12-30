@@ -1,15 +1,16 @@
 import './App.css';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import Home from './pages/Home';
-import Header from './components/Header';
+import {BrowserRouter, Routes, Route,} from 'react-router-dom';
+import Register from './pages/register/Register';
 
 function App() {
   return (
-    <Header />
-    //<Router>
-      //<Route path="/" exact render={() => <Home />} />
-   // </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" exact element={<Register />} />
+      </Routes>
+      </BrowserRouter>
   );
 }
 
 export default App;
+

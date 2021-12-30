@@ -1,13 +1,12 @@
 .Header {
+    text-align: center;
     width: auto;
-    height: 10rem;
+    height: 8rem;
     background-color: white;
     box-shadow: 0 30px 20px rgba(114, 114, 114, 10%);
-    margin: auto;
 }
 
-.logo {
-    margin: auto;
-    height: 100px;
-    width: auto;
+.Logo {
+    padding-top: 2.5rem;
+    width: 15rem;
 }
