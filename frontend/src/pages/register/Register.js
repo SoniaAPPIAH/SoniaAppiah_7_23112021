@@ -12,7 +12,7 @@ function Register() {
    // const navigate = useNavigate();
     
     const register = () => {
-        Axios.post("http://localhost:3001/user/register", {
+        Axios.post("http://localhost:3000/register", {
             lastname: lastname, firstname: firstname, email: email, password: password
         }).then((response) => {
             console.log(response);
@@ -32,7 +32,7 @@ function Register() {
                 <input type="text" placeholder="Email" onChange={(event) => {setEmail(event.target.value);}} />
                 <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}} />
                 <button onClick={register} className="ButtonRegister">S'inscrire</button>
-                <p>Vous avez déjà un compte ? <a href="./login/Login">Connectez-vous !</a></p>
+                <p>Vous avez déjà un compte ? <a href="http://localhost:3000/login">Connectez-vous !</a></p>
             </div>
         </div>
         </>
