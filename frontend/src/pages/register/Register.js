@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Header from '../../components/header/Header';
 import './Register.css';
 import Axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 function Register() {
     const [lastname, setLastname] = useState('');
     const [firstname, setFirstname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+   // const navigate = useNavigate();
     
     const register = () => {
         Axios.post("http://localhost:3001/user/register", {
