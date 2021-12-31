@@ -27,8 +27,10 @@ exports.register = async (req, res) => {
 
 exports.login = (req, res, next) => {
   db.query("SELECT * FROM Users WHERE email = ?", [req.body.email], function (err, result) {
-      let user = result[0];
+      const user = result[0];
+
       if (!user) return res.status(401).json({ error: "Email incorrect" });
+
       bcrypt.compare(req.body.password, user.password)
           .then(valid => {
               if (!valid) {
@@ -47,6 +49,7 @@ exports.login = (req, res, next) => {
           .catch(error => res.status(500).json({ message: "Erreur authentification" }));
   })
 };
+
 exports.logout = (req, res) => {
 
 };
