@@ -1,8 +1,6 @@
-const express = require('express');
-const router = express.Router();
 const db = require('../config/db');
 
-router.post("/register", (req, res) => {
+exports.register = (req, res) => {
     const lastname = req.body.lastname;
     const firstname = req.body.firstname;
     const email = req.body.email;
@@ -15,9 +13,9 @@ router.post("/register", (req, res) => {
             res.send(results);
         }
     );
-});
+};
 
-router.post("/login", (req, res) => {
+exports.login = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     db.query(
@@ -37,8 +35,5 @@ router.post("/login", (req, res) => {
             res.json({ loggedIn: false, message: "L'utilisateur n'existe pas !" });
           }
         }
-      );
-    });
-
-
-module.exports = router;
+    );
+};
