@@ -12,7 +12,7 @@ function Register() {
    // const navigate = useNavigate();
     
     const register = () => {
-        Axios.post("http://localhost:3000/register", {
+        Axios.post("http://localhost:3001/auth/register", {
             lastname: lastname, firstname: firstname, email: email, password: password
         }).then((response) => {
             console.log(response);

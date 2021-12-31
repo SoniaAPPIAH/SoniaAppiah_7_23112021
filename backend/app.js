@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 });
 
 // Routes 
-app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 
 
 module.exports = app;
