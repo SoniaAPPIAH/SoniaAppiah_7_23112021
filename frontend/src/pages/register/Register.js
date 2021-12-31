@@ -5,6 +5,7 @@ import Axios from "axios";
 // import { useNavigate } from "react-router-dom";
 
 function Register() {
+    const [errorMessage, setErrorMessage] = useState('');
     const [lastname, setLastname] = useState('');
     const [firstname, setFirstname] = useState('');
     const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ function Register() {
         Axios.post("http://localhost:3001/auth/register", {
             lastname: lastname, firstname: firstname, email: email, password: password
         }).then((response) => {
-            console.log(response);
+            setErrorMessage(response.data.message);
         });
     };
 
@@ -33,6 +34,7 @@ function Register() {
                 <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}} />
                 <button onClick={register} className="ButtonRegister">S'inscrire</button>
                 <p>Vous avez déjà un compte ? <a href="http://localhost:3000/login">Connectez-vous !</a></p>
+                {errorMessage}
             </div>
         </div>
         </>
