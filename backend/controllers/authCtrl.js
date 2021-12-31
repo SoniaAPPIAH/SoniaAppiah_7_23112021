@@ -1,13 +1,14 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.register = async (req, res) => {
   try {
-    const oldPassword = req.body.password;
     const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(oldPassword, salt)
+    const hash = await bcrypt.hash(req.body.password, salt)
 
-    const user ={
+    const user = {
       ...req.body,
       password: hash,
     }
@@ -24,25 +25,32 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    db.query(
-        "SELECT * FROM Users WHERE email = ?",
-        email,
-        (err, results) => {
-          if (err) {
-            console.log(err);
-          }
-          if (results.length > 0) {
-            if (password == results[0].password) {
-              res.json({ loggedIn: true, email: email });
-            } else {
-              res.json({ loggedIn: false, message: "Mot de passe incorrect !" });
-            }
-          } else {
-            res.json({ loggedIn: false, message: "L'utilisateur n'existe pas !" });
-          }
-        }
-    );
+exports.login = (req, res, next) => {
+  db.query("SELECT * FROM Users WHERE email = ?", [req.body.email], function (err, result) {
+      let user = result[0];
+      if (!user) return res.status(401).json({ error: "Email incorrect" });
+      bcrypt.compare(req.body.password, user.password)
+          .then(valid => {
+              if (!valid) {
+                  return res.status(401).json({ error: " Mot de passe incorrect !" })
+              }
+              console.log("utilisateur connecté");
+              res.status(200).json({
+                  userId: user.id,
+                  token: jwt.sign(
+                      { userId: user.id },
+                      process.env.SECRET_TOKEN_KEY,
+                      { expiresIn: "24h" },
+                  ),
+              })
+          })
+          .catch(error => res.status(500).json({ message: "Erreur authentification" }));
+  })
+};
+exports.logout = (req, res) => {
+
+};
+
+exports.deleteAccount = (req, res) => {
+
 };

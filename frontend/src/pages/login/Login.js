@@ -13,15 +13,16 @@ const Login = () => {
     const login = () => {
         Axios.post("http://localhost:3001/auth/login", {
             email: email, password: password
-        }).then((response) => {
-            if (response.data.loggedIn) {
-                localStorage.setItem("loggedIn", true);
-                localStorage.setItem("email", response.data.email);
-                navigate.push("http://localhost:3000");
-            } else {
-                setErrorMessage(response.data.message);
-            }
-        });
+            })
+            .then((response) => {
+                if (response.data.loggedIn) {
+                    localStorage.setItem("loggedIn", true);
+                    localStorage.setItem("email", response.data.email);
+                    navigate.push("http://localhost:3000");
+                } else {
+                    setErrorMessage(response.data.message);
+                }
+            });
     };
 
     return (
@@ -32,7 +33,9 @@ const Login = () => {
                 <h1>SE CONNECTER</h1>
                 <input type="text" placeholder="Email" onChange={(event) => {setEmail(event.target.value);}}/>
                 <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}}/>
-                <button onClick={login} className="ButtonLogin">Se connecter</button>
+                <a href="http://localhost:3000">
+                    <input type="button" onClick={login} className="ButtonLogin" value="Se connecter"/>
+                </a>
                 {errorMessage}
             </div>
         </div>

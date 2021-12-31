@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const authCtrl= require('../controllers/authCtrl');
+const password = require('../middleware/password');
 
 
-router.post("/register", authCtrl.register);
+router.post("/register", password, authCtrl.register);
 router.post("/login", authCtrl.login);
+router.get("/logout", authCtrl.logout);
+router.get("/deleteAccount/:id", authCtrl.deleteAccount);
 
 module.exports = router;
