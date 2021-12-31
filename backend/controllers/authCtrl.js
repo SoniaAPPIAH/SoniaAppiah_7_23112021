@@ -8,9 +8,11 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(req.body.password, salt)
 
+    //const image = `${req.protocol}://${req.get('localhost')}/images/profilpicture/photo_defaut.png`;
     const user = {
       ...req.body,
       password: hash,
+    // imageURL: image,
     }
 
     db.query( "INSERT INTO Users SET ?", user, (err, result) => {
@@ -25,18 +27,17 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   db.query("SELECT * FROM Users WHERE email = ?", [req.body.email], function (err, result) {
       const user = result[0];
 
-      if (!user) return res.status(401).json({ error: "Email incorrect" });
+      if (!user) return res.json({ message: "Email incorrect !" });
 
       bcrypt.compare(req.body.password, user.password)
           .then(valid => {
               if (!valid) {
-                  return res.status(401).json({ error: " Mot de passe incorrect !" })
+                  return res.json({ message: "Mot de passe incorrect !" })
               }
-              console.log("utilisateur connecté");
               res.status(200).json({
                   userId: user.id,
                   token: jwt.sign(
@@ -46,14 +47,6 @@ exports.login = (req, res, next) => {
                   ),
               })
           })
-          .catch(error => res.status(500).json({ message: "Erreur authentification" }));
+          .catch(err => res.status(500).json({ message: "Erreur d'authentification" }));
   })
-};
-
-exports.logout = (req, res) => {
-
-};
-
-exports.deleteAccount = (req, res) => {
-
 };
