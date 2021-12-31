@@ -11,13 +11,13 @@ const Login = () => {
     const navigate = useNavigate();
     
     const login = () => {
-        Axios.post("http://localhost:3001/user/login", {
+        Axios.post("http://localhost:3001/auth/login", {
             email: email, password: password
         }).then((response) => {
             if (response.data.loggedIn) {
                 localStorage.setItem("loggedIn", true);
                 localStorage.setItem("email", response.data.email);
-                navigate.push("/");
+                navigate.push("http://localhost:3000");
             } else {
                 setErrorMessage(response.data.message);
             }
