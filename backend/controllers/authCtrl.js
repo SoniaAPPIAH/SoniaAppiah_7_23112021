@@ -81,11 +81,12 @@ exports.logout = (req, res) => {
 
 exports.deleteAccount = (req, res) => {
   const userId = req.params.id;
-  db.query("UPDATE Users u SET active=0 WHERE u.id = ?", userId, (err, results) => {
+  const sql = `DELETE FROM Users WHERE users.id = ${userId};`;
+  db.query(sql, (err, results) => {
     if (err) {
       return res.status(404).json({ err });
     }
     res.clearCookie("jwt");
-    res.status(200).json("Compte supprimé");
+    res.status(200).json("DESACTIVATE");
   });
 };

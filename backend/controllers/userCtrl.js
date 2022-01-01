@@ -28,4 +28,4 @@ exports.updateOneUser = (req, res, next) => {
         }
       });
     }
-  };
+};
