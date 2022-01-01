@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   //===== Check if user exists in DB ======
   const {email, password: clearPassword } = req.body;
   const sqlLogin = "SELECT * FROM Users WHERE email=?";
@@ -75,20 +75,15 @@ exports.login = (req, res) => {
   });
 };
 
-exports.logout = (req, res) => {
-  res.clearCookie("jwt");
-  res.status(200).json("OUT");
-};
-
 exports.logout = async (req, res) => {
   res.clearCookie("jwt");
-  res.status(200).json("OUT");
+  res.status(200).json("Utilisateur déconnecté");
 };
 
 exports.deleteAccount = async (req, res) => {
   const userId = req.params.id;
-  const sql = `DELETE FROM Users WHERE users.id = ${userId};`;
-  db.query(sql, (err, results) => {
+  const sqlDelete = `DELETE FROM Users WHERE users.id = ${userId};`;
+  db.query(sqlDelete, (err, results) => {
     if (err) {
       return res.status(404).json({ err });
     }

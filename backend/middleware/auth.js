@@ -1,18 +1,26 @@
 const jwt = require('jsonwebtoken');
+const db = require('../config/db')
 require('dotenv').config();
 
 module.exports = (req, res, next) => {
-    try{
-      const token = req.headers.authorization.split(' ')[1];
-      const decodedToken = jwt.verify(token, process.env.JWT_DECODEDTOKEN);
-      const userId = decodedToken.userId
-
-      if(req.body.userId && req.body.userId !== userId ){
-        throw "User ID non valable"
-      } else {
-        next();
-      }
-    } catch{
-      res.status(401).json({error: error | "Requête non authentifiée !" })
+  try {
+    if (req.cookies.jwt) {
+      const { jwt: token } = req.cookies;
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
+      const { id: userId } = decodedToken;
+      const sql = `SELECT id FROM Users WHERE id = ${userId}`;
+      db.query(sql, (err, result) => {
+        if (err) res.status(204).json(err);
+        else {
+          next();
+        }
+      });
+    } else {
+      res.clearCookie();
+      res.status(401).json({ message: "Unauthorized"});
     }
+  } catch (err) {
+    res.clearCookie();
+    res.status(401).json({ message: "Unauthorized 2" });
+  }
 };
