@@ -7,7 +7,6 @@ exports.register = async (req, res) => {
   try {
     const oldPassword = req.body.password;
 
-    // ====== Password encryption =========
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(oldPassword, salt);
 
@@ -28,7 +27,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   //===== Check if user exists in DB ======
   const { email, password: clearPassword } = req.body;
   db.query("SELECT * FROM Users WHERE email = ?", [email], async (err, results) => {

@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes')
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -13,8 +14,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
 // Routes 
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 
 
 module.exports = app;

@@ -8,7 +8,7 @@ const [password, setPassword] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
 
 const login = () => {
-    Axios.post("http://localhost:3001/auth/login", {
+    Axios.post("http://localhost:3000/api/auth/login", {
         email: email, password: password
         })
         .then((response) => {
