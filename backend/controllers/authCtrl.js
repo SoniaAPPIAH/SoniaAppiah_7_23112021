@@ -1,52 +1,92 @@
-const db = require('../config/db');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const db = require("../config/db");
 
 exports.register = async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(req.body.password, salt)
+    const oldPassword = req.body.password;
 
-    //const image = `${req.protocol}://${req.get('localhost')}/images/profilpicture/photo_defaut.png`;
+    // ====== Password encryption =========
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPassword = await bcrypt.hash(oldPassword, salt);
+
     const user = {
       ...req.body,
-      password: hash,
-    // imageURL: image,
-    }
+      password: encryptedPassword,
+    };
 
-    db.query( "INSERT INTO Users SET ?", user, (err, result) => {
+    db.query("INSERT INTO users SET ?", user, (err, result) => {
       if (!result) {
-        res.json({ message: "L'email existe déjà !" });
+        res.status(200).json({ message: "Email déjà enregistré !" });
       } else {
-        res.json({ message: "L'utilisateur a bien été crée !" });
+        res.status(201).json({ message: "L'utilisateur a bien été crée !" });
       }
     });
   } catch (err) {
-    res.json({ message: "Echec de l'inscription", err });
+    res.status(200).json({ message: "Echec d'incription", err });
   }
 };
 
 exports.login = (req, res) => {
-  db.query("SELECT * FROM Users WHERE email = ?", [req.body.email], function (err, result) {
-      const user = result[0];
+  //===== Check if user exists in DB ======
+  const { email, password: clearPassword } = req.body;
+  db.query("SELECT * FROM Users WHERE email = ?", [email], async (err, results) => {
+    if (err) {
+      return res.status(404).json({ err });
+    }
 
-      if (!user) return res.json({ message: "Email incorrect !" });
+    // ===== Verify password with hash in DB ======
+    if (results[0] && results[0].active === 1) {
+      try {
+        const { password: hashedPassword, id } = results[0];
+        const match = await bcrypt.compare(clearPassword, hashedPassword);
+        if (match) {
+          // If match, generate JWT token
+          const token = jwt.sign({ id }, process.env.JWT_DECODEDTOKEN, {
+            expiresIn: '24h',
+          });
 
-      bcrypt.compare(req.body.password, user.password)
-          .then(valid => {
-              if (!valid) {
-                  return res.json({ message: "Mot de passe incorrect !" })
-              }
-              res.status(200).json({
-                  userId: user.id,
-                  token: jwt.sign(
-                      { userId: user.id },
-                      process.env.SECRET_TOKEN_KEY,
-                      { expiresIn: "24h" },
-                  ),
-              })
-          })
-          .catch(err => res.status(500).json({ message: "Erreur d'authentification" }));
-  })
+          delete results[0].user_password;
+
+          res.cookie("jwt", token);
+          res.status(200).json({
+            user: results[0],
+            token: jwt.sign({ userId: user_id }, process.env.JWT_DECODEDTOKEN, {
+              expiresIn: "24h",
+            }),
+          });
+        } 
+      } catch (err) {
+        console.log(err);
+        return res.status(400).json({ err });
+      }
+    } else if (results[0] && results[0].active === 0) {
+      res.status(200).json({
+        error: true,
+        message: "Votre compte a été désactivé",
+      });
+    } else if (!results[0]) {
+      res.status(200).json({
+        error: true,
+        message: "Mauvaise combinaison email / mot de passe"
+      })
+    }
+  });
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json("OUT");
+};
+
+exports.deleteAccount = (req, res) => {
+  const userId = req.params.id;
+  db.query("UPDATE Users u SET active=0 WHERE u.id = ?", userId, (err, results) => {
+    if (err) {
+      return res.status(404).json({ err });
+    }
+    res.clearCookie("jwt");
+    res.status(200).json("Compte supprimé");
+  });
 };
