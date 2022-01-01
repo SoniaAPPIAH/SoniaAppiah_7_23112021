@@ -1,16 +1,10 @@
-.Login {
-    width: 100%;
-    height: 700px;
-}
-
 .LoginForm {
     margin: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    width: 500px;
-    height: 700px;
+    width: 300px;
 }
 
 .LoginForm h1 {

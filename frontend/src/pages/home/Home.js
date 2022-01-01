@@ -1,21 +1,27 @@
-import React from 'react';
-import Header from '../components/Header/Header';
-// import Posts from "../components/Posts/Posts";
-// import WhatsUp from "../components/WhatsUp/WhatsUp";
-import './Home.css';
+import React from "react";
+import Header from '../../components/header/Header';
+import Connexion from '../connection/Connection';
 
-const NewsFeed = ({transparent}) => {
+
+function Home() {
+  const user = JSON.parse(localStorage.getItem("connectedUser"));
+  const direction = ()=>{
+      if(user != null) {
+          return console.log('je sais pas')
+      }
+      else {
+          return <Connexion/>
+      }        
+  }
   return (
-    <div className={transparent ? "transparent" : "container__global"}>
-      <Header profileTab={true} />
-      <div className="container">
-        <WhatsUp />
-        <h3 className="publication__title">Publications récentes</h3>
-        <Posts />
-      </div>
-    </div>
+    <>
+      <Header />
+        <div className="main">
+            {direction()}
+        </div>
+    </>
   );
-};
+}
 
-export default NewsFeed;
+export default Home
 
