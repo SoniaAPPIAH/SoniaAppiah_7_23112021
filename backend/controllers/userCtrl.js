@@ -14,7 +14,7 @@ exports.getOneUser = async (req, res) => {
     });
 };
 
-exports.updateOneUser = (req, res, next) => {
+exports.updateUser = (req, res, next) => {
     if (req.file) {
       const {id: id} = req.params
       let {destination, filename} = req.file

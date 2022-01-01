@@ -27,31 +27,38 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = (req, res) => {
   //===== Check if user exists in DB ======
-  const { email, password: clearPassword } = req.body;
-  db.query("SELECT * FROM Users WHERE email = ?", [email], async (err, results) => {
+  const {email, password: clearPassword } = req.body;
+  const sqlLogin = "SELECT * FROM Users WHERE email=?";
+  db.query(sqlLogin, [email], async (err, results) => {
     if (err) {
       return res.status(404).json({ err });
     }
 
     // ===== Verify password with hash in DB ======
-    if (results[0] && results[0].active === 1) {
       try {
-        const { password: hashedPassword, id } = results[0];
+        const { password: hashedPassword, email } = results[0];
         const match = await bcrypt.compare(clearPassword, hashedPassword);
         if (match) {
           // If match, generate JWT token
-          const token = jwt.sign({ id }, process.env.JWT_DECODEDTOKEN, {
-            expiresIn: '24h',
+          const maxAge = 1 * (24 * 60 * 60 * 1000);
+          const token = jwt.sign({ email }, process.env.JWT_SECRET_TOKEN, {
+            expiresIn: maxAge,
           });
 
-          delete results[0].user_password;
+          // httpOnly: true,
+          // maxAge,
+          // sameSite: true,
+          // secure: true,
 
-          res.cookie("jwt", token);
+          // remove the password key of the response
+          delete results[0].password;
+
+          res.cookie("jwt", token, { httpOnly: true, maxAge});
           res.status(200).json({
             user: results[0],
-            token: jwt.sign({ userId: user_id }, process.env.JWT_DECODEDTOKEN, {
+            token: jwt.sign({ email }, process.env.JWT_SECRET_TOKEN, {
               expiresIn: "24h",
             }),
           });
@@ -59,13 +66,7 @@ exports.login = async (req, res) => {
       } catch (err) {
         console.log(err);
         return res.status(400).json({ err });
-      }
-    } else if (results[0] && results[0].active === 0) {
-      res.status(200).json({
-        error: true,
-        message: "Votre compte a été désactivé",
-      });
-    } else if (!results[0]) {
+      } if (!results[0]) {
       res.status(200).json({
         error: true,
         message: "Mauvaise combinaison email / mot de passe"
@@ -79,7 +80,12 @@ exports.logout = (req, res) => {
   res.status(200).json("OUT");
 };
 
-exports.deleteAccount = (req, res) => {
+exports.logout = async (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json("OUT");
+};
+
+exports.deleteAccount = async (req, res) => {
   const userId = req.params.id;
   const sql = `DELETE FROM Users WHERE users.id = ${userId};`;
   db.query(sql, (err, results) => {
@@ -87,6 +93,6 @@ exports.deleteAccount = (req, res) => {
       return res.status(404).json({ err });
     }
     res.clearCookie("jwt");
-    res.status(200).json("DESACTIVATE");
+    res.status(200).json("Votre compte a bien été désactivé");
   });
 };
