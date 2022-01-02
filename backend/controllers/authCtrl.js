@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
       password: encryptedPassword,
     };
 
-    db.query("INSERT INTO users SET ?", user, (err, result) => {
+    db.query("INSERT INTO Users SET ?", user, (err, result) => {
       if (!result) {
         res.status(200).json({ message: "Email déjà enregistré !" });
       } else {
@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   //===== Check if user exists in DB ======
   const {email, password: clearPassword } = req.body;
-  const sqlLogin = "SELECT * FROM Users WHERE email=?";
+  const sqlLogin = `SELECT * FROM Users WHERE email=?`;
   db.query(sqlLogin, [email], async (err, results) => {
     if (err) {
       return res.status(404).json({ err });
@@ -82,7 +82,7 @@ exports.logout = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
   const userId = req.params.id;
-  const sqlDelete = `DELETE FROM Users WHERE users.id = ${userId};`;
+  const sqlDelete = `DELETE FROM Users WHERE users.userId = ${userId};`;
   db.query(sqlDelete, (err, results) => {
     if (err) {
       return res.status(404).json({ err });

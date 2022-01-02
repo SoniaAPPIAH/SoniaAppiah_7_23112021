@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
     if (req.cookies.jwt) {
       const { jwt: token } = req.cookies;
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-      const { id: userId } = decodedToken;
+      const { userId: userId } = decodedToken;
       const sql = `SELECT id FROM Users WHERE id = ${userId}`;
       db.query(sql, (err, result) => {
         if (err) res.status(204).json(err);

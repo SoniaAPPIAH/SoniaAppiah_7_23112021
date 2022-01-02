@@ -4,7 +4,9 @@ const postCtrl = require('../controllers/postCtrl');
 
 router.get('/', postCtrl.getAllPosts);
 router.post('/', postCtrl.createPost);
-router.put('/:d', postCtrl.updatePost);
-router.delete('/:d', postCtrl.deletePost);
+router.put('/:id', postCtrl.updatePost);
+router.delete('/:id', postCtrl.deletePost);
+
+router.post('/:postId')
 
 module.exports = router;
