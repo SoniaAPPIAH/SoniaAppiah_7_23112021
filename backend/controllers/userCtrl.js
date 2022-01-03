@@ -16,27 +16,27 @@ exports.getOneUser = async (req, res) => {
 };
 
 exports.updateUser = (req, res, next) => {
-  if (req.file) {
-    db.query("SELECT * FROM Users WHERE userId = ?", [req.params.id], function (err, result) {
+    const { id: userId } = req.params;
+    const dbUpdateUser = `SELECT * FROM Users WHERE users.userId = ${userId};`;
+    db.query(dbUpdateUser, (err, result) => {
         if (err) res.status(400).json({ err });
         if (!result[0]) res.status(400).json({ message: "Aucun id ne correspond dans la table" });
         else {
             // SI LE USER A UNE IMAGE, LA SUPPRIMER DU DOSSIER IMAGES/PROFILE
-            if (result[0].pp != "http://localhost:3000/images/profile/pp.png") {
-                const name = result[0].pp.split('/images/profile/')[1];
-                fs.unlink(`images/profile/${name}`, () => {
+            if (result[0].profilpicture != "http://localhost:3001/images/profil/pp.png") {
+                const name = result[0].profilpicture?result[0].profilpicture.split('/images/profil/'): [];
+                fs.unlink(`images/profil/${name}`, () => {
                     if (err) console.log(err);
                     else console.log('Image modifiée !');
                 })
             }
             // RECUPERE LES INFOS ENVOYER PAR LE FRONT 
-            let image = (req.file) ? `${req.protocol}://${req.get('host')}/images/profile/${req.file.filename}` : "";
+            let image = (req.file) ? `${req.protocol}://${req.get('host')}/images/profil/${req.file.filename}` : "";
             // UPDATE LA DB
-            db.query("UPDATE Users SET pp = ? WHERE id = ?", [image, req.params.id], function (err, result) {
+            db.query("UPDATE Users SET profilpicture = ? WHERE users.userId = ?", [image, req.params.id], function (err, result) {
                 if (err) throw err;
                 res.status(201).json({ message: `Photo user udpate` });
             });
         }
     });
-}
 }

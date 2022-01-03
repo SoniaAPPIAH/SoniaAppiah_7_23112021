@@ -9,10 +9,12 @@ exports.register = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(oldPassword, salt);
+    const imageDefaut = ('/images/profil/photo_defaut.png');
 
     const user = {
       ...req.body,
       password: encryptedPassword,
+      profilpicture: imageDefaut
     };
 
     db.query("INSERT INTO Users SET ?", user, (err, result) => {
@@ -46,8 +48,6 @@ exports.login = async (req, res) => {
           const token = jwt.sign({ email }, process.env.JWT_SECRET_TOKEN, {
             expiresIn: maxAge,
           });
-          
-          delete results[0].password;
 
           res.cookie("jwt", token, { httpOnly: true, maxAge});
           res.status(200).json({
@@ -58,8 +58,7 @@ exports.login = async (req, res) => {
           });
         } 
       } catch (err) {
-        console.log(err);
-        return res.status(400).json({ err });
+        return res.status(400).json( "test" );
       } if (!results[0]) {
       res.status(200).json({
         error: true,
