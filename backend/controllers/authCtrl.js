@@ -46,13 +46,7 @@ exports.login = async (req, res) => {
           const token = jwt.sign({ email }, process.env.JWT_SECRET_TOKEN, {
             expiresIn: maxAge,
           });
-
-          // httpOnly: true,
-          // maxAge,
-          // sameSite: true,
-          // secure: true,
-
-          // remove the password key of the response
+          
           delete results[0].password;
 
           res.cookie("jwt", token, { httpOnly: true, maxAge});

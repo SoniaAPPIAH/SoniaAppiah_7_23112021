@@ -1,10 +1,14 @@
-import React from 'react'
+import React from 'react';
+import HeaderConnected from '../../components/header/HeaderConnected'
 
 function Feed() {
     return (
-        <div>
-            test
-        </div>
+        <>
+        <HeaderConnected />
+          <div className="main">
+
+          </div>
+      </>
     )
 }
 

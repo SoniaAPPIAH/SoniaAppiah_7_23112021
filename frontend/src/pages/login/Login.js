@@ -11,9 +11,9 @@ const Login = () => {
         const emailError = document.querySelector('.email.error');
         const passwordError = document.querySelector('.password.error');
 
-        Axios.post("http://localhost:3001/api/auth/login", {
-            email: email, password: password
-            })
+        Axios.post("http://localhost:3001/api/auth/login", 
+        { email: email, password: password},
+        { withCredentials: true })
         .then((res) => {
             if (res.data.errors) {
                 emailError.innerHTML = res.data.errors.email;

@@ -7,10 +7,10 @@ router.post('/', postCtrl.createPost);
 router.put('/:id', postCtrl.updatePost);
 router.delete('/:id', postCtrl.deletePost);
 
-router.patch('/like-post/:id', postCtrl.likeUnlikePost);
+router.patch('/likepost/:id', postCtrl.likeUnlikePost);
 
-router.patch('/comment-post/:id', postCtrl.createComment);
-router.get('/all-comments-post/:id', postCtrl.getAllComments);
-router.delete('/delete-comment-post/:id', postCtrl.deleteComment);
+router.patch('/comment/:id', postCtrl.createComment);
+router.get('/allcomments/:id', postCtrl.getAllComments);
+router.delete('/deletecomment/:id', postCtrl.deleteComment);
 
 module.exports = router;

@@ -11,7 +11,7 @@ function Register() {
     const [password, setPassword] = useState('');
    // const navigate = useNavigate();
     
-    const register = () => {
+    const handleRegister = () => {
         Axios.post("http://localhost:3001/api/auth/register", {
             lastname: lastname, firstname: firstname, email: email, password: password
         }).then((response) => {
@@ -29,7 +29,7 @@ function Register() {
                 </div>
                 <input type="text" placeholder="Email" onChange={(event) => {setEmail(event.target.value);}} />
                 <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}} />
-                <button onClick={register} className="ButtonRegister">S'inscrire</button>
+                <button onClick={handleRegister} className="ButtonRegister">S'inscrire</button>
                 <p>Vous avez déjà un compte ? Connectez-vous !</p>
                 {errorMessage}
             </div>
