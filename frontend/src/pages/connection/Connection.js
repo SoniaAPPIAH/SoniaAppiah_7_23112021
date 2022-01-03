@@ -19,12 +19,12 @@ function Connection() {
     return (
         <div className="connectionForm">
             <div className="connectionButtons">
-                <div className="titleRegisterLogin" id="register" onClick={handleModals}>S'inscrire</div>
-                <div className="titleRegisterLogin" id="login" onClick={handleModals}>Se connecter</div>
+                <div className={signUpModal ? "active-btn" : null} id="register" onClick={handleModals}>S'inscrire</div>
+                <div className={loginModal ? "active-btn" : null} id="login" onClick={handleModals}>Se connecter</div>
             </div>                   
                 {signUpModal && <Register/>}
                 {loginModal && <Login/>}     
-        </div>
+        </div> 
     );
 };
 

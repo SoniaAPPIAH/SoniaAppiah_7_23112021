@@ -3,36 +3,52 @@ import './Login.css';
 import Axios from "axios";
 
 const Login = () => {
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
-const [errorMessage, setErrorMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-const login = () => {
-    Axios.post("http://localhost:3000/api/auth/login", {
-        email: email, password: password
-        })
-        .then((response) => {
-            if (response.data.loggedIn) {
-                localStorage.setItem("loggedIn", true);
-                localStorage.setItem("email", response.data.email);
+    const handleLogin = (e) => {
+        e.preventDefault();
+        const emailError = document.querySelector('.email.error');
+        const passwordError = document.querySelector('.password.error');
+
+        Axios.post("http://localhost:3001/api/auth/login", {
+            email: email, password: password
+            })
+        .then((res) => {
+            if (res.data.errors) {
+                emailError.innerHTML = res.data.errors.email;
+                passwordError.innerHTML = res.data.errors.password;
             } else {
-                setErrorMessage(response.data.message);
+                window.location = '/feed';
             }
-        });
-};
+        })
+        .catch ((err) => {
+            console.log(err)
+        })
+    };
 
     return (
-        <>
-        <div className="Login">
-            <div className="LoginForm">
-                <input type="text" placeholder="Email" onChange={(event) => {setEmail(event.target.value);}}/>
-                <input type="password" placeholder="Mot de passe" onChange={(event) => {setPassword(event.target.value);}}/>
-                <button onClick={login} className="ButtonLogin">Se connecter</button>
-                {errorMessage}
-            </div>
-        </div>
-        </>
+        <form action="" onSubmit={handleLogin} id="LoginForm">
+            <input 
+                type="text" 
+                name="email" 
+                id="email" 
+                placeholder="Email" 
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}/>
+            <div className="email error"></div>
+            <input 
+                type="password" 
+                name="password"
+                id="password"
+                placeholder="Mot de passe" 
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}/>
+            <div className="password error"></div>
+            <button className="ButtonLogin">Se connecter</button>
+        </form>
     );
 };
 
 export default Login;
+

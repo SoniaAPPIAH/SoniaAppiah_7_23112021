@@ -1,5 +1,7 @@
-.LoginForm {
-    margin: auto;
+#LoginForm {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -7,11 +9,7 @@
     width: 300px;
 }
 
-.LoginForm h1 {
-    font-size: 2rem;
-}
-
-.LoginForm input {
+#LoginForm input {
     height: 50px;
     margin: 10px 0 10px 0;
     padding-left: 15px;

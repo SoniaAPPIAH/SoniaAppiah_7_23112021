@@ -73,7 +73,7 @@ exports.deletePost = async (req, res) => {
     })
 };
 
-exports.likeUnlikePost = (req, res) => {
+exports.likeUnlikePost = async (req, res) => {
     const { userId, postId } = req.body;
     const sqlSelect = `SELECT * FROM likes WHERE likes.userId = ${userId} AND likes.postId = ${postId}`;
     db.query(sqlSelect, (err, result) => {
@@ -105,4 +105,47 @@ exports.likeUnlikePost = (req, res) => {
         });
       }
     });
-  };
+};
+
+exports.createComment = async (req, res) => {
+    const post = {
+        ...req.body
+    };
+    const sql = `UPDATE Posts SET posts.comment = posts.comment + 1 WHERE postId=?;`;
+    db.query(sql, [req.body.postId], function (err, result) {
+        if (err) res.status(400).json({ err });
+        let sql = `INSERT INTO Comments (comment, authorId, postId) VALUES (?,?,?);`;
+        db.query(sql, [post], function (err, result) {
+            if (err) throw err;
+            console.log(result)
+            res.status(201).json({ message: `Commentaire ajouté` });
+        })
+    });
+};
+
+exports.getAllComments = async (req, res) => {
+    db.query("SELECT * from comment c JOIN user u WHERE c.authorId = u.id ORDER BY idComment;", function (err, result) {
+        if (err) res.status(400).json({ err });
+        res.status(200).json(result)
+    });
+};
+
+exports.deleteComment = async (req, res) => {
+    let sql3 = `SELECT * from Comments WHERE idComment=?`;
+    db.query(sql3, [req.params.commentId], function (err, result) {
+        if (result[0].authorId == req.body.userId) {
+            if (err) res.status(400).json({ err });
+            let sql2 = `DELETE from Comments WHERE idComment=?;`;
+            db.query(sql2, [req.params.commentId], function (err, result) {
+                if (err) res.status(400).json({ err });
+                let sql = `UPDATE Posts SET post.comment = posts.comment - 1 WHERE postId=?;`;
+                db.query(sql, [req.params.postId], function (err, result) {
+                    if (err) res.status(400).json({ err });
+                    res.status(200).json(result)
+                });
+            })
+        } else {
+            res.status(400).json({ message : "Bien essayé petit malin!" });   
+        }
+    });
+};

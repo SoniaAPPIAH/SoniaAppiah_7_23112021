@@ -7,6 +7,10 @@ router.post('/', postCtrl.createPost);
 router.put('/:id', postCtrl.updatePost);
 router.delete('/:id', postCtrl.deletePost);
 
-router.post('/:postId')
+router.patch('/like-post/:id', postCtrl.likeUnlikePost);
+
+router.patch('/comment-post/:id', postCtrl.createComment);
+router.get('/all-comments-post/:id', postCtrl.getAllComments);
+router.delete('/delete-comment-post/:id', postCtrl.deleteComment);
 
 module.exports = router;
