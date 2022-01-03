@@ -1,6 +1,9 @@
 import React from 'react';
 import Axios from 'axios';
 import cookie from 'js-cookie';
+import './Logout.css';
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Logout = () => {
 
@@ -12,9 +15,8 @@ const Logout = () => {
 
     const logout = async () => {
 
-        Axios.get("http://localhost:3001/api/auth/logout", {
-            withCredentials: true
-        })
+        Axios.get("http://localhost:3001/api/auth/logout", 
+        { withCredentials: true })
             .then(() => removeCookie ('jwt'))
             .catch((err) => console.log(err))
 
@@ -22,9 +24,9 @@ const Logout = () => {
     };
 
     return (
-    <li onClick={logout}>
-        <p>logout</p>
-    </li>
+    <div onClick={logout}>
+        <FontAwesomeIcon icon={faSignOutAlt} className="LogoLogout"/>
+    </div>
     )
 }
 

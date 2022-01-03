@@ -14,17 +14,17 @@ const Login = () => {
         Axios.post("http://localhost:3001/api/auth/login", 
         { email: email, password: password},
         { withCredentials: true })
-        .then((res) => {
-            if (res.data.errors) {
-                emailError.innerHTML = res.data.errors.email;
-                passwordError.innerHTML = res.data.errors.password;
-            } else {
-                window.location = '/feed';
-            }
-        })
-        .catch ((err) => {
-            console.log(err)
-        })
+            .then((res) => {
+                if (res.data.errors) {
+                    emailError.innerHTML = res.data.errors.email;
+                    passwordError.innerHTML = res.data.errors.password;
+                } else {
+                    window.location = '/feed';
+                }
+            })
+            .catch ((err) => {
+                console.log(err)
+            })
     };
 
     return (

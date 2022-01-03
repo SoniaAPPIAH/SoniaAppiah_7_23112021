@@ -1,12 +1,15 @@
-.Header {
+.HeaderConnected {
+    padding: 0 40px 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     text-align: center;
     width: auto;
-    height: 8rem;
+    height: 6rem;
     background-color: white;
     box-shadow: 0 30px 20px rgba(114, 114, 114, 10%);
 }
 
-.Logo {
-    padding-top: 2.5rem;
+.LogoConnected {
     width: 15rem;
 }
