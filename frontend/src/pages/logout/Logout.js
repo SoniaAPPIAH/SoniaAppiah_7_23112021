@@ -17,7 +17,8 @@ const Logout = () => {
 
         Axios.get("http://localhost:3001/api/auth/logout", 
         { withCredentials: true })
-            .then(() => removeCookie ('jwt'))
+            .then(() => removeCookie ('jwt'), 
+            localStorage.clear())
             .catch((err) => console.log(err))
 
         window.location = "/";

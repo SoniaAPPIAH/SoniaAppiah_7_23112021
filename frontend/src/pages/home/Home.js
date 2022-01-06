@@ -5,7 +5,7 @@ import Feed from '../feed/Feed';
 
 
 function Home() {
-  const user = JSON.parse(localStorage.getItem("connectedUser"));
+  const user = JSON.parse(localStorage.getItem("user"));
   const direction = ()=>{
       if(user != null) {
         return <Feed/>
@@ -16,7 +16,6 @@ function Home() {
   }
   return (
     <>
-      <Header />
         <div className="main">
             {direction()}
         </div>
